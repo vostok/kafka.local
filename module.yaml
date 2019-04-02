@@ -1,0 +1,23 @@
+notests *default:
+  build:
+    target: Vostok.Kafka.Local.sln
+    configuration: NoTests
+    tool:
+      name: dotnet
+
+  install:
+    - Vostok.Kafka.Local/bin/Release/netstandard2.0/Vostok.Kafka.Local.dll
+
+  deps:
+    - vostok.commons.time
+    - vostok.logging.console
+    - vostok.logging.abstractions
+    - vostok.commons.process
+    - vostok.devtools
+
+full-build > notests:
+  deps:
+    - vostok.zookeeper.localensemble
+  build:
+    target: Vostok.Kafka.Local.sln
+    configuration: Release

@@ -22,10 +22,6 @@
     <RepositoryUrl>https://github.com/vostok/kafka.local</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Vostok.Commons.Process">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\vostok.commons.process\Vostok.Commons.Process\bin\Release\netstandard2.0\Vostok.Commons.Process.dll</HintPath>
-    </Reference>
     <Reference Include="Vostok.Logging.Abstractions">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.logging.abstractions\Vostok.Logging.Abstractions\bin\Release\netstandard2.0\Vostok.Logging.Abstractions.dll</HintPath>
@@ -36,11 +32,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\kafka_2.11-2.1.0.tgz" />
+    <EmbeddedResource Include="..\..\vostok.kafka.local.resources\*.*" LinkBase="Resources\" />
   </ItemGroup>
+  <Import Project="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Windows\WindowsProcessKillJob.props" />
   <ItemGroup>
     <Compile Include="..\..\vostok.commons.helpers\Vostok.Commons.Helpers\Network\FreeTcpPortFinder.cs" Link="Commons\FreeTcpPortFinder.cs" />
     <Compile Include="..\..\vostok.commons.time\Vostok.Commons.Time\TimeSpanConversions.cs" Link="Commons\TimeSpanConversions.cs" />
+    <Compile Include="..\..\vostok.commons.local\Vostok.Commons.Local\JavaProperties.cs" Link="Commons\JavaProperties.cs" />
+    <Compile Include="..\..\vostok.commons.local\Vostok.Commons.Local\ProcessWrapper.cs" Link="Commons\ProcessWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="1.0.0-RC2" />

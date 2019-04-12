@@ -27,8 +27,31 @@ namespace Vostok.Kafka.Local.Tests
         }
         
         [Test]
-        public void Should_deploy_and_run_Kafka_by_default()
+        public void DeployNew_should_run_kafka_by_default()
         {
+            using (var kafka = KafkaInstance.DeployNew(zkConnectionString, log))
+            {
+                kafka.IsRunning.Should().BeTrue();
+            }
+        }
+
+        [Test]
+        public void DeployNew_should_not_run_kafka_if_specified()
+        {
+            using (var kafka = KafkaInstance.DeployNew(zkConnectionString, log, false))
+            {
+                kafka.IsRunning.Should().BeFalse();
+            }
+        }
+
+        [Test]
+        public void DeployNew_should_run_multiple_times()
+        {
+            using (var kafka = KafkaInstance.DeployNew(zkConnectionString, log))
+            {
+                kafka.IsRunning.Should().BeTrue();
+            }
+            
             using (var kafka = KafkaInstance.DeployNew(zkConnectionString, log))
             {
                 kafka.IsRunning.Should().BeTrue();

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Vostok.Commons.Helpers.Network;
+using Vostok.Commons.Local;
 using Vostok.Kafka.Local.Helpers;
 using Vostok.Logging.Abstractions;
 
@@ -9,11 +11,13 @@ namespace Vostok.Kafka.Local
 {
     internal static class KafkaDeployer
     {
-        private const string KafkaDirectoryName = "kafka_2.11-2.1.0";
+        private const string KafkaDirectoryName = "kafka_2.12-2.2.0";
 
         public static KafkaInstance DeployNew(KafkaSettings settings, ILog log, bool started = true)
         {
-            var baseDirectory = CreateBaseDirectory(settings);
+            var baseDirectory = GetBaseDirectory(settings);
+            Directory.CreateDirectory(baseDirectory);
+            
             var kafkaDirectory = Path.Combine(baseDirectory, KafkaDirectoryName);
             if (Directory.Exists(kafkaDirectory))
                 Directory.Delete(kafkaDirectory, true);
@@ -52,34 +56,30 @@ namespace Vostok.Kafka.Local
             }
         }
 
-        private static string CreateBaseDirectory(KafkaSettings settings)
+        private static string GetBaseDirectory(KafkaSettings settings)
         {
-            var baseDirectory = settings.BaseDirectory;
-            if (string.IsNullOrEmpty(baseDirectory))
-                baseDirectory = Directory.GetCurrentDirectory();
-
-            Directory.CreateDirectory(baseDirectory);
-
-            return baseDirectory;
+            return string.IsNullOrEmpty(settings.BaseDirectory) ? Directory.GetCurrentDirectory() : settings.BaseDirectory;
         }
 
         private static void GenerateConfig(KafkaInstance instance, KafkaSettings settings)
         {
-            var properties = new JavaProperties();
-            properties.SetProperty("broker.id", "0");
-            properties.SetProperty("listeners", $"PLAINTEXT://:{instance.Port}");
-            properties.SetProperty("log.dirs", instance.LogDataDirectory);
-            properties.SetProperty("offsets.topic.replication.factor", "1");
-            properties.SetProperty("transaction.state.log.replication.factor", "1");
-            properties.SetProperty("transaction.state.log.min.isr", "1");
-            properties.SetProperty("log.flush.interval.messages", "10000");
-            properties.SetProperty("log.flush.interval.ms", "1000");
-            properties.SetProperty("zookeeper.connect", settings.ZooKeeperConnectionString);
-            properties.SetProperty("zookeeper.connection.timeout.ms", "6000");
-            properties.SetProperty("group.initial.rebalance.delay.ms", "0");
-            properties.SetProperty("delete.topic.enable", $"{settings.DeleteTopicEnable}");
+            var properties = new Dictionary<string, string>
+            {
+                ["broker.id"] = "0",
+                ["listeners"] = $"PLAINTEXT://:{instance.Port}",
+                ["log.dirs"] = instance.LogDataDirectory,
+                ["offsets.topic.replication.factor"] = "1",
+                ["transaction.state.log.replication.factor"] = "1",
+                ["transaction.state.log.min.isr"] = "1",
+                ["log.flush.interval.messages"] = "10000",
+                ["log.flush.interval.ms"] = "1000",
+                ["zookeeper.connect"] = settings.ZooKeeperConnectionString,
+                ["zookeeper.connection.timeout.ms"] = "6000",
+                ["group.initial.rebalance.delay.ms"] = "0",
+                ["delete.topic.enable"] = $"{settings.DeleteTopicEnable}"
+            };
 
-            properties.Save(instance.KafkaPropertiesFile);
+            new JavaProperties(properties).Save(instance.KafkaPropertiesFile);
         }
     }
 }

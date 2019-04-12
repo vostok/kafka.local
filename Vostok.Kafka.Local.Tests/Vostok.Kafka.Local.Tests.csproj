@@ -18,9 +18,6 @@
     <ProjectReference Include="..\Vostok.Kafka.Local\Vostok.Kafka.Local.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Vostok.Commons.Process, Version=0.0.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\vostok.commons.process\Vostok.Commons.Process\bin\Release\netstandard2.0\Vostok.Commons.Process.dll</HintPath>
-    </Reference>
     <Reference Include="Vostok.Logging.Console">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\vostok.logging.console\Vostok.Logging.Console\bin\Release\netstandard2.0\Vostok.Logging.Console.dll</HintPath>

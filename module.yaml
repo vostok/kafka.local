@@ -7,17 +7,20 @@ notests *default:
 
   install:
     - Vostok.Kafka.Local/bin/Release/netstandard2.0/Vostok.Kafka.Local.dll
+    - nuget SharpZipLib/1.1.0
+    - nuget Confluent.Kafka/1.0.0-RC2
 
   deps:
+    - vostok.kafka.local.resources@2.12-2.2.0
     - vostok.commons.time
-    - vostok.logging.console
     - vostok.logging.abstractions
-    - vostok.commons.process
+    - vostok.commons.local
     - vostok.devtools
 
 full-build > notests:
   deps:
     - vostok.zookeeper.localensemble
+    - vostok.logging.console
   build:
     target: Vostok.Kafka.Local.sln
     configuration: Release

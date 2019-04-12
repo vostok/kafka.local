@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using Vostok.Commons.Process;
+using Vostok.Commons.Local;
 using Vostok.Commons.Time;
 using Vostok.Kafka.Local.Helpers;
 using Vostok.Logging.Abstractions;
@@ -11,10 +11,10 @@ namespace Vostok.Kafka.Local
 {
     public class KafkaInstance : ProcessWrapper, IDisposable
     {
-        private KafkaHealthChecker healthChecker;
+        private readonly KafkaHealthChecker healthChecker;
 
         internal KafkaInstance(string baseDirectory, int port, ILog log)
-            : base(log, "Kafka")
+            : base(log, "Kafka", true)
         {
             Port = port;
             BaseDirectory = baseDirectory;
@@ -32,6 +32,7 @@ namespace Vostok.Kafka.Local
         }
 
         public int Port { get; }
+        public string ConnectionString  => $"localhost:{Port}";
         public string BaseDirectory { get; }
         public string LibDirectory => Path.Combine(BaseDirectory, "libs");
         public string Log4jDirectory => Path.Combine(BaseDirectory, "logs");
@@ -55,7 +56,7 @@ namespace Vostok.Kafka.Local
             base.Start();
             
             if (!healthChecker.WaitStarted(20.Seconds()))
-                throw new Exception("Kafka has not warmed up in 20 seconds..");
+                throw new TimeoutException("Kafka has not warmed up in 20 seconds..");
         }
 
         private string BuildKafkaArguments()

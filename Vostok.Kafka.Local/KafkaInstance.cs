@@ -28,7 +28,23 @@ namespace Vostok.Kafka.Local
 
         public static KafkaInstance DeployNew(KafkaSettings settings, ILog log, bool started = true)
         {
-            return KafkaDeployer.DeployNew(settings, log, started);
+            KafkaInstance kafkaInstance = null;
+            try
+            {
+                kafkaInstance = KafkaDeployer.DeployNew(settings, log);
+                
+                if (started)
+                    kafkaInstance.Start();
+
+                return kafkaInstance;
+            }
+            catch (Exception error)
+            {
+                log.Error(error, "Error in deploy. Will try to stop and cleanup.");
+                kafkaInstance?.Dispose();
+                KafkaDeployer.Cleanup(settings);
+                throw;
+            }
         }
 
         public int Port { get; }
@@ -44,7 +60,7 @@ namespace Vostok.Kafka.Local
         public void Dispose()
         {
             Stop();
-            KafkaDeployer.CleanupInstance(this);
+            KafkaDeployer.Cleanup(BaseDirectory);
         }
 
         protected override string FileName => "java";

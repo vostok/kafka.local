@@ -13,12 +13,12 @@ namespace Vostok.Kafka.Local
     {
         private const string KafkaDirectoryName = "kafka_2.12-2.2.0";
 
-        public static KafkaInstance DeployNew(KafkaSettings settings, ILog log, bool started = true)
+        public static KafkaInstance DeployNew(KafkaSettings settings, ILog log)
         {
             var baseDirectory = GetBaseDirectory(settings);
             Directory.CreateDirectory(baseDirectory);
-            
-            var kafkaDirectory = Path.Combine(baseDirectory, KafkaDirectoryName);
+
+            var kafkaDirectory = GetKafkaDirectory(settings);
             if (Directory.Exists(kafkaDirectory))
                 Directory.Delete(kafkaDirectory, true);
 
@@ -34,19 +34,24 @@ namespace Vostok.Kafka.Local
 
             GenerateConfig(instance, settings);
 
-            if (started)
-                instance.Start();
-
             return instance;
         }
 
-        public static void CleanupInstance(KafkaInstance instance)
+        public static void Cleanup(KafkaSettings settings)
         {
+            Cleanup(GetKafkaDirectory(settings));
+        }
+
+        public static void Cleanup(string kafkaDirectory)
+        {
+            if (!Directory.Exists(kafkaDirectory))
+                return;
+            
             for (var i = 0; i < 3; i++)
             {
                 try
                 {
-                    Directory.Delete(instance.BaseDirectory, true);
+                    Directory.Delete(kafkaDirectory, true);
                     break;
                 }
                 catch (Exception)
@@ -61,6 +66,11 @@ namespace Vostok.Kafka.Local
             return string.IsNullOrEmpty(settings.BaseDirectory) ? Directory.GetCurrentDirectory() : settings.BaseDirectory;
         }
 
+        private static string GetKafkaDirectory(KafkaSettings settings)
+        {
+            return Path.Combine(GetBaseDirectory(settings), KafkaDirectoryName);
+        }
+        
         private static void GenerateConfig(KafkaInstance instance, KafkaSettings settings)
         {
             var properties = new Dictionary<string, string>

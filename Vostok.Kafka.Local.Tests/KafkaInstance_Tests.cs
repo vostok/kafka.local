@@ -10,26 +10,12 @@ namespace Vostok.Kafka.Local.Tests
     internal class KafkaInstance_Tests
     {
         private readonly ILog log = new SynchronousConsoleLog();
-        private ZooKeeperEnsemble zooKeeperEnsemble;
-        private string zkConnectionString;
-
-        [SetUp]
-        public void SetUp()
-        {
-            zooKeeperEnsemble = ZooKeeperEnsemble.DeployNew(1, log);
-            zkConnectionString = $"localhost:{zooKeeperEnsemble.Instances[0].ClientPort}";
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            zooKeeperEnsemble.Dispose();
-        }
         
         [Test]
         public void DeployNew_should_run_kafka_by_default()
         {
-            using (var kafka = KafkaInstance.DeployNew(zkConnectionString, log))
+            using (var zooKeeperEnsemble = DeployZooKeeper())
+            using (var kafka = KafkaInstance.DeployNew(zooKeeperEnsemble.ConnectionString, log))
             {
                 kafka.IsRunning.Should().BeTrue();
             }
@@ -38,7 +24,8 @@ namespace Vostok.Kafka.Local.Tests
         [Test]
         public void DeployNew_should_not_run_kafka_if_specified()
         {
-            using (var kafka = KafkaInstance.DeployNew(zkConnectionString, log, false))
+            using (var zooKeeperEnsemble = DeployZooKeeper())
+            using (var kafka = KafkaInstance.DeployNew(zooKeeperEnsemble.ConnectionString, log, false))
             {
                 kafka.IsRunning.Should().BeFalse();
             }
@@ -47,15 +34,22 @@ namespace Vostok.Kafka.Local.Tests
         [Test]
         public void DeployNew_should_run_multiple_times()
         {
-            using (var kafka = KafkaInstance.DeployNew(zkConnectionString, log))
+            using (var zooKeeperEnsemble = DeployZooKeeper())
+            using (var kafka = KafkaInstance.DeployNew(zooKeeperEnsemble.ConnectionString, log))
             {
                 kafka.IsRunning.Should().BeTrue();
             }
             
-            using (var kafka = KafkaInstance.DeployNew(zkConnectionString, log))
+            using (var zooKeeperEnsemble = DeployZooKeeper())
+            using (var kafka = KafkaInstance.DeployNew(zooKeeperEnsemble.ConnectionString, log))
             {
                 kafka.IsRunning.Should().BeTrue();
             }
+        }
+
+        private ZooKeeperEnsemble DeployZooKeeper()
+        {
+            return ZooKeeperEnsemble.DeployNew(1, log);
         }
     }
 }

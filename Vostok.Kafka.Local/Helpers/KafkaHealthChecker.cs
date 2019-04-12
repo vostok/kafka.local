@@ -62,7 +62,7 @@ namespace Vostok.Kafka.Local.Helpers
 
             using (var p = new ProducerBuilder<Null, string>(config).Build())
             {
-                var result = await p.ProduceAsync(topic, new Message<Null, string> {Value = message});
+                var result = await p.ProduceAsync(topic, new Message<Null, string> {Value = message}).ConfigureAwait(false);
                 log.Debug($"Producing message complete with status = {result.Status}.");
                 return result.Status == PersistenceStatus.Persisted;
             }

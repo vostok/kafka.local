@@ -9,6 +9,7 @@ notests *default:
     - Vostok.Kafka.Local/bin/Release/netstandard2.0/Vostok.Kafka.Local.dll
     - nuget SharpZipLib/1.1.0
     - nuget Confluent.Kafka/1.0.0-RC2
+    - nuget librdkafka.redist/1.0.0
 
   deps:
     - vostok.kafka.local.resources@2.12-2.2.0

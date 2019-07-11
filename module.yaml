@@ -13,9 +13,9 @@ notests *default:
 
   deps:
     - vostok.kafka.local.resources@2.12-2.2.0
-    - vostok.commons.time
+    - vostok.commons.time/src
     - vostok.logging.abstractions
-    - vostok.commons.local
+    - vostok.commons.local/src
     - vostok.devtools
 
 full-build > notests:

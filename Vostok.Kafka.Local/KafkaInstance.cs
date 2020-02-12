@@ -71,7 +71,7 @@ namespace Vostok.Kafka.Local
         {
             base.Start();
             
-            if (!healthChecker.WaitStarted(20.Seconds()))
+            if (!healthChecker.WaitStarted(60.Seconds()))
                 throw new TimeoutException("Kafka has not warmed up in 20 seconds..");
         }
 

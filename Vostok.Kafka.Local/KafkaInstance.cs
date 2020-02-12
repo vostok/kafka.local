@@ -20,7 +20,7 @@ namespace Vostok.Kafka.Local
             BaseDirectory = baseDirectory;
             healthChecker = new KafkaHealthChecker(log, $"localhost:{port}");
         }
-        
+
         public static KafkaInstance DeployNew(string zooKeeperConnectionString, ILog log, bool started = true)
         {
             return DeployNew(new KafkaSettings {ZooKeeperConnectionString = zooKeeperConnectionString}, log, started);
@@ -32,7 +32,7 @@ namespace Vostok.Kafka.Local
             try
             {
                 kafkaInstance = KafkaDeployer.DeployNew(settings, log);
-                
+
                 if (started)
                     kafkaInstance.Start();
 
@@ -48,7 +48,7 @@ namespace Vostok.Kafka.Local
         }
 
         public int Port { get; }
-        public string ConnectionString  => $"localhost:{Port}";
+        public string ConnectionString => $"localhost:{Port}";
         public string BaseDirectory { get; }
         public string LibDirectory => Path.Combine(BaseDirectory, "libs");
         public string Log4jDirectory => Path.Combine(BaseDirectory, "logs");
@@ -63,17 +63,18 @@ namespace Vostok.Kafka.Local
             KafkaDeployer.Cleanup(BaseDirectory);
         }
 
-        protected override string FileName => "java";
-        protected override string Arguments => BuildKafkaArguments();
-        protected override string WorkingDirectory => BaseDirectory;
-
         public override void Start()
         {
             base.Start();
-            
-            if (!healthChecker.WaitStarted(60.Seconds()))
-                throw new TimeoutException("Kafka has not warmed up in 20 seconds..");
+
+            var timeSpan = 60.Seconds();
+            if (!healthChecker.WaitStarted(timeSpan))
+                throw new TimeoutException($"Kafka has not warmed up in {timeSpan.TotalSeconds} seconds..");
         }
+
+        protected override string FileName => "java";
+        protected override string Arguments => BuildKafkaArguments();
+        protected override string WorkingDirectory => BaseDirectory;
 
         private string BuildKafkaArguments()
         {

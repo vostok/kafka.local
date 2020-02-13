@@ -11,7 +11,7 @@ namespace Vostok.Kafka.Local
 {
     internal static class KafkaDeployer
     {
-        private const string KafkaDirectoryName = "kafka_2.12-2.2.0";
+        private const string KafkaDirectoryName = "kafka_2.13-2.4.0";
 
         public static KafkaInstance DeployNew(KafkaSettings settings, ILog log)
         {

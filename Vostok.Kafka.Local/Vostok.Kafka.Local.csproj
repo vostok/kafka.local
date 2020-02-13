@@ -42,8 +42,8 @@
     <Compile Include="..\..\vostok.commons.local\Vostok.Commons.Local\ProcessWrapper.cs" Link="Commons\ProcessWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Confluent.Kafka" Version="1.0.0-RC2" />
-    <PackageReference Include="librdkafka.redist" Version="1.0.0" />
-    <PackageReference Include="SharpZipLib" Version="1.1.0" />
+    <PackageReference Include="Confluent.Kafka" Version="1.3.0" />
+    <PackageReference Include="librdkafka.redist" Version="1.3.0" />
+    <PackageReference Include="SharpZipLib" Version="1.2.0" />
   </ItemGroup>
 </Project>

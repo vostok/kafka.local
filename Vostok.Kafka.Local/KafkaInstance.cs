@@ -67,9 +67,9 @@ namespace Vostok.Kafka.Local
         {
             base.Start();
 
-            var timeSpan = 60.Seconds();
+            var timeSpan = 20.Seconds();
             if (!healthChecker.WaitStarted(timeSpan))
-                throw new TimeoutException($"Kafka has not warmed up in {timeSpan.TotalSeconds} seconds..");
+                Log.Error($"Kafka has not warmed up in {timeSpan.TotalSeconds} seconds..");
         }
 
         protected override string FileName => "java";

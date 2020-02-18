@@ -76,7 +76,7 @@ namespace Vostok.Kafka.Local
             var properties = new Dictionary<string, string>
             {
                 ["broker.id"] = "0",
-                ["listeners"] = $"PLAINTEXT://:{instance.Port}",
+                ["listeners"] = $"PLAINTEXT://localhost:{instance.Port}",
                 ["log.dirs"] = instance.LogDataDirectory,
                 ["offsets.topic.replication.factor"] = "1",
                 ["transaction.state.log.replication.factor"] = "1",

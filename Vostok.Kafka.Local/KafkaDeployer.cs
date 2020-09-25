@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Vostok.Commons.Helpers.Network;
-using Vostok.Commons.Local;
 using Vostok.Kafka.Local.Helpers;
 using Vostok.Logging.Abstractions;
 
@@ -23,7 +22,7 @@ namespace Vostok.Kafka.Local
                 Directory.Delete(kafkaDirectory, true);
 
             var deployerLog = log.ForContext(nameof(KafkaDeployer));
-            
+
             deployerLog.Debug("Started Kafka extraction...");
             ResourceHelper.ExtractResource<KafkaInstance>($"Vostok.Kafka.Local.Resources.{KafkaDirectoryName}.tgz", baseDirectory);
             deployerLog.Debug("Finished Kafka extraction.");
@@ -46,7 +45,7 @@ namespace Vostok.Kafka.Local
         {
             if (!Directory.Exists(kafkaDirectory))
                 return;
-            
+
             for (var i = 0; i < 3; i++)
             {
                 try
@@ -70,7 +69,7 @@ namespace Vostok.Kafka.Local
         {
             return Path.Combine(GetBaseDirectory(settings), KafkaDirectoryName);
         }
-        
+
         private static void GenerateConfig(KafkaInstance instance, KafkaSettings settings)
         {
             var properties = new Dictionary<string, string>

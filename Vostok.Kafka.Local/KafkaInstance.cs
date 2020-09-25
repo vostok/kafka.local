@@ -1,7 +1,7 @@
 using System;
 using System.IO;
-using Vostok.Commons.Local;
 using Vostok.Commons.Time;
+using Vostok.Commons.Local;
 using Vostok.Kafka.Local.Helpers;
 using Vostok.Logging.Abstractions;
 
@@ -9,16 +9,25 @@ using Vostok.Logging.Abstractions;
 
 namespace Vostok.Kafka.Local
 {
-    public class KafkaInstance : ProcessWrapper, IDisposable
+    public class KafkaInstance : IDisposable
     {
         private readonly KafkaHealthChecker healthChecker;
+        private readonly ShellRunner shellRunner;
 
         internal KafkaInstance(string baseDirectory, int port, ILog log)
-            : base(log, "Kafka", true)
         {
+            log = log.ForContext("KafkaLocal");
+
             Port = port;
             BaseDirectory = baseDirectory;
             healthChecker = new KafkaHealthChecker(log, $"localhost:{port}");
+            shellRunner = new ShellRunner(
+                new ShellRunnerSettings("java")
+                {
+                    Arguments = BuildKafkaArguments(),
+                    WorkingDirectory = BaseDirectory
+                },
+                log);
         }
 
         public static KafkaInstance DeployNew(string zooKeeperConnectionString, ILog log, bool started = true)
@@ -56,25 +65,22 @@ namespace Vostok.Kafka.Local
         public string LogDataDirectory => Path.Combine(BaseDirectory, "kafka-logs");
         public string Log4jPropertiesFile => Path.Combine(ConfigDirectory, "log4j.properties");
         public string KafkaPropertiesFile => Path.Combine(ConfigDirectory, "server.properties");
+        public bool IsRunning => shellRunner.IsRunning;
 
         public void Dispose()
         {
-            Stop();
+            shellRunner.Stop();
             KafkaDeployer.Cleanup(BaseDirectory);
         }
 
-        public override void Start()
+        public void Start()
         {
-            base.Start();
+            shellRunner.Start();
 
             var timeSpan = 60.Seconds();
             if (!healthChecker.WaitStarted(timeSpan))
                 throw new TimeoutException($"Kafka has not warmed up in {timeSpan.TotalSeconds} seconds..");
         }
-
-        protected override string FileName => "java";
-        protected override string Arguments => BuildKafkaArguments();
-        protected override string WorkingDirectory => BaseDirectory;
 
         private string BuildKafkaArguments()
         {

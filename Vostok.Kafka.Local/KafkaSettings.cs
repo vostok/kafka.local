@@ -4,6 +4,6 @@ namespace Vostok.Kafka.Local
     {
         public string ZooKeeperConnectionString { get; set; }
         public string BaseDirectory { get; set; }
-        public bool DeleteTopicEnable { get; set; } = false;
+        public bool DeleteTopicEnable { get; set; } = true;
     }
 }

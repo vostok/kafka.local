@@ -77,7 +77,7 @@ namespace Vostok.Kafka.Local
         {
             shellRunner.Start();
 
-            var timeSpan = 60.Seconds();
+            var timeSpan = 150.Seconds();
             if (!healthChecker.WaitStarted(timeSpan))
                 throw new TimeoutException($"Kafka has not warmed up in {timeSpan.TotalSeconds} seconds..");
         }

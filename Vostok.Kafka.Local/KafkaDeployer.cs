@@ -83,7 +83,7 @@ namespace Vostok.Kafka.Local
                 ["log.flush.interval.messages"] = "10000",
                 ["log.flush.interval.ms"] = "1000",
                 ["zookeeper.connect"] = settings.ZooKeeperConnectionString,
-                ["zookeeper.connection.timeout.ms"] = "6000",
+                ["zookeeper.connection.timeout.ms"] = "15000",
                 ["group.initial.rebalance.delay.ms"] = "0",
                 ["delete.topic.enable"] = $"{settings.DeleteTopicEnable}"
             };

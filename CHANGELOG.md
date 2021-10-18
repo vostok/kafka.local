@@ -1,3 +1,7 @@
+## 0.1.3 (18-10-2021):
+
+Increase zookeeper connection timeout and WarmUp timeout.
+
 ## 0.1.2 (02-08-2021):
 
 Set `DeleteTopicEnable` to `true`

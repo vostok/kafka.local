@@ -13,7 +13,7 @@ notests *default:
 
   deps:
     - vostok.kafka.local.resources@2.12-2.2.0
-    - vostok.commons.local/v2_1
+    - vostok.commons.local@Retrier/v2_1
     - vostok.commons.time/src
     - vostok.logging.abstractions
     - vostok.devtools

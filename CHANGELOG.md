@@ -1,3 +1,7 @@
+## 0.1.4 (26-11-2021):
+
+Add retries for deploying KafkaCluster
+
 ## 0.1.3 (18-10-2021):
 
 Increase zookeeper connection timeout and WarmUp timeout.

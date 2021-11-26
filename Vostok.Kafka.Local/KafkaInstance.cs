@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Vostok.Commons.Time;
 using Vostok.Commons.Local;
+using Vostok.Commons.Local.Helpers;
 using Vostok.Kafka.Local.Helpers;
 using Vostok.Logging.Abstractions;
 
@@ -38,22 +39,24 @@ namespace Vostok.Kafka.Local
         public static KafkaInstance DeployNew(KafkaSettings settings, ILog log, bool started = true)
         {
             KafkaInstance kafkaInstance = null;
-            try
+            
+            Retrier.RetryOnException(() =>
             {
                 kafkaInstance = KafkaDeployer.DeployNew(settings, log);
 
                 if (started)
                     kafkaInstance.Start();
-
-                return kafkaInstance;
-            }
-            catch (Exception error)
+            },
+            3,
+            "Unable to start Kafka.Local",
+            () =>
             {
-                log.Error(error, "Error in deploy. Will try to stop and cleanup.");
+                log.Warn("Retrying Kafka.Local deployment...");
                 kafkaInstance?.Dispose();
                 KafkaDeployer.Cleanup(settings);
-                throw;
-            }
+            });
+
+            return kafkaInstance;
         }
 
         public int Port { get; }

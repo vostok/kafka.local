@@ -1,0 +1,23 @@
+static Vostok.Kafka.Local.KafkaInstance.DeployNew(string zooKeeperConnectionString, Vostok.Logging.Abstractions.ILog log, bool started = true) -> Vostok.Kafka.Local.KafkaInstance
+static Vostok.Kafka.Local.KafkaInstance.DeployNew(Vostok.Kafka.Local.KafkaSettings settings, Vostok.Logging.Abstractions.ILog log, bool started = true) -> Vostok.Kafka.Local.KafkaInstance
+Vostok.Kafka.Local.KafkaInstance
+Vostok.Kafka.Local.KafkaInstance.BaseDirectory.get -> string
+Vostok.Kafka.Local.KafkaInstance.ConfigDirectory.get -> string
+Vostok.Kafka.Local.KafkaInstance.ConnectionString.get -> string
+Vostok.Kafka.Local.KafkaInstance.Dispose() -> void
+Vostok.Kafka.Local.KafkaInstance.IsRunning.get -> bool
+Vostok.Kafka.Local.KafkaInstance.KafkaPropertiesFile.get -> string
+Vostok.Kafka.Local.KafkaInstance.LibDirectory.get -> string
+Vostok.Kafka.Local.KafkaInstance.Log4jDirectory.get -> string
+Vostok.Kafka.Local.KafkaInstance.Log4jPropertiesFile.get -> string
+Vostok.Kafka.Local.KafkaInstance.LogDataDirectory.get -> string
+Vostok.Kafka.Local.KafkaInstance.Port.get -> int
+Vostok.Kafka.Local.KafkaInstance.Start() -> void
+Vostok.Kafka.Local.KafkaSettings
+Vostok.Kafka.Local.KafkaSettings.BaseDirectory.get -> string
+Vostok.Kafka.Local.KafkaSettings.BaseDirectory.set -> void
+Vostok.Kafka.Local.KafkaSettings.DeleteTopicEnable.get -> bool
+Vostok.Kafka.Local.KafkaSettings.DeleteTopicEnable.set -> void
+Vostok.Kafka.Local.KafkaSettings.KafkaSettings() -> void
+Vostok.Kafka.Local.KafkaSettings.ZooKeeperConnectionString.get -> string
+Vostok.Kafka.Local.KafkaSettings.ZooKeeperConnectionString.set -> void
